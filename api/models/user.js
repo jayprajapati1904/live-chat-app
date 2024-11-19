@@ -30,3 +30,18 @@ export const updateUserProfilePhoto = async (userId, profilePhotoUrl) => {
   await sql`
     UPDATE users SET profile_photo = ${profilePhotoUrl} WHERE id = ${userId}`;
 };
+
+// models/user.js
+
+// Function to fetch all users from the database
+export const getAllUsers = async () => {
+  try {
+    const rows =
+      await sql`SELECT id, username, email, profile_photo, status FROM users`;
+
+    return rows;
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    throw error;
+  }
+};

@@ -2,7 +2,12 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { createUser, getUserByEmail, getUserById } from "../models/user.js";
+import {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  getAllUsers,
+} from "../models/user.js";
 import verifyToken from "../middleware/auth.js";
 import { updateUserProfilePhoto } from "../models/user.js"; // Function to update DB
 import upload from "../middleware/upload.js";
@@ -142,4 +147,34 @@ router.post(
     }
   }
 );
+// ====== Get All Users Except the Current User Route ======
+router.get("/all-users", verifyToken, async (req, res) => {
+  try {
+    const userId = 1; // Extract user ID from the token to check if the user is authenticated
+    const currentUser = await getUserById(userId);
+
+    // Check if the current user exists
+    if (!currentUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Fetch all users except the current user
+    const users = await getAllUsers(); // Fetch all users from the database
+    if (!users) {
+      return res.status(404).json({ error: "No users found" });
+    }
+
+    // Remove the current user from the list of users
+    const filteredUsers = users.filter((user) => user.id !== userId);
+
+    // Remove sensitive data (like password) before returning the users
+    const sanitizedUsers = filteredUsers.map(({ password, ...user }) => user);
+
+    res.status(200).json({ users: sanitizedUsers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;
