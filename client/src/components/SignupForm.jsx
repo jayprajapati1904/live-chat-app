@@ -31,7 +31,7 @@ const SignupForm = () => {
       if (response.ok) {
         message.success(`Welcome, ${data.user.username}! Signup successful.`);
         localStorage.setItem("token", data.token);
-        navigate("/chat");
+        navigate("/users");
       } else {
         message.error(data.error || "Signup failed. Please try again.");
       }

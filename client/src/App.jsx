@@ -4,7 +4,7 @@ import SignupForm from "./components/SignupForm";
 import SigninForm from "./components/SigninForm";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Chat from "./pages/Chat";
+import Users from "./pages/Users";
 import PrivateRoute from "./components/PrivateRoute";
 import { AuthProvider } from "./context/AuthContext";
 
@@ -18,10 +18,10 @@ function App() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/signin" element={<SigninForm />} />
           <Route
-            path="/chat"
+            path="/users"
             element={
               <PrivateRoute>
-                <Chat />
+                <Users />
               </PrivateRoute>
             }
           />

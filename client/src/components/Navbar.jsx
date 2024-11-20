@@ -4,6 +4,7 @@ import { Drawer, message } from "antd";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
+  const [username, setUsername] = useState(""); // State to store the username
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const { isAuthenticated, logout } = useAuth();
@@ -17,6 +18,7 @@ const Navbar = () => {
         const data = await response.json();
         if (data.user) {
           setProfilePhoto(data.user.profile_photo);
+          setUsername(data.user.username); // Assuming the response contains a `username` field
         }
       }
     };
@@ -112,7 +114,7 @@ const Navbar = () => {
           ) : (
             <>
               <Link
-                to="/message"
+                to="/users"
                 className="cursor-pointer hover:text-green-400 transition duration-300"
               >
                 Message
@@ -204,6 +206,11 @@ const Navbar = () => {
                   onClick={triggerFileInput}
                 />
 
+                {/* Username Text */}
+                <p className="text-xl font-semibold text-gray-700">
+                  {username || "Loading..."}
+                </p>
+
                 {/* Hidden File Input */}
                 <input
                   id="fileInput"
@@ -217,7 +224,7 @@ const Navbar = () => {
                 {/* Upload Button */}
                 <button
                   type="button"
-                  className={`mt-4 px-4 py-2 rounded ${
+                  className={`my-4 px-4 py-2 rounded ${
                     isUploading
                       ? "bg-gray-300 cursor-not-allowed"
                       : "bg-blue-600 text-white hover:bg-blue-700"
@@ -229,7 +236,7 @@ const Navbar = () => {
                 </button>
               </div>
               <Link
-                to="/message"
+                to="/users"
                 className="block py-2 px-3 text-base md:text-lg text-white hover:bg-blue-600 hover:shadow-lg rounded-md transition duration-200 ease-in-out"
               >
                 Message

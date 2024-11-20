@@ -123,6 +123,8 @@ router.get("/getuser", verifyToken, async (req, res) => {
   }
 });
 
+// ====== Update Profile-photo ======
+
 router.post(
   "/upload-profile-photo",
   verifyToken,
@@ -147,10 +149,11 @@ router.post(
     }
   }
 );
+
 // ====== Get All Users Except the Current User Route ======
 router.get("/all-users", verifyToken, async (req, res) => {
   try {
-    const userId = 1; // Extract user ID from the token to check if the user is authenticated
+    const userId = req.user.id; // Extract user ID from the token to check if the user is authenticated
     const currentUser = await getUserById(userId);
 
     // Check if the current user exists

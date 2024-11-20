@@ -37,7 +37,7 @@ const SigninForm = () => {
         login(); // User is authenticated
         setError("");
         setLoading(false);
-        navigate("/chat");
+        navigate("/users");
       } else {
         setError(data.error || "Signin failed");
         setSuccess("");
