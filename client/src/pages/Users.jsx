@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { List, Avatar, Spin, Typography } from "antd";
+import { io } from "socket.io-client";
+
 const { Title, Text } = Typography;
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const socket = io("http://localhost:5000"); // Connect to WebSocket server
 
-  // Fetch all users from the backend
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("access_token"); // Fetch JWT token from storage
-
+        const token = localStorage.getItem("access_token");
         const response = await fetch("/api/user/all-users", {
           method: "GET",
           headers: {
@@ -33,7 +34,16 @@ export default function Users() {
     };
 
     fetchUsers();
-  }, []);
+
+    // Notify server the user is online
+    const userId = localStorage.getItem("userId"); // Save user ID in localStorage
+    socket.emit("user-online", userId);
+
+    // Cleanup on component unmount
+    // return () => {
+    //   socket.disconnect();
+    // };
+  }, [socket]);
 
   if (loading) {
     return (
@@ -49,7 +59,7 @@ export default function Users() {
         level={2}
         className="mt-10 text-yellow-300 font-bold mb-8 text-center"
       >
-        Messages
+        Users
       </Title>
       <List
         itemLayout="horizontal"
@@ -64,13 +74,18 @@ export default function Users() {
               }
               className="ml-3 w-14 h-14 rounded-full border border-gray-400"
             />
-
             {/* User Details */}
             <div className="flex flex-col flex-1 ml-4">
               <Text className="text-lg font-bold text-yellow-300">
                 {user.username}
               </Text>
-              <Text className="text-gray-400">{user.status}</Text>
+              <Text
+                className={
+                  user.status === "online" ? "text-green-400" : "text-red-400"
+                }
+              >
+                {user.status === "online" ? "Online" : "Offline"}
+              </Text>
             </div>
           </List.Item>
         )}

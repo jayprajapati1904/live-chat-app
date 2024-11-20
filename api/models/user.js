@@ -45,3 +45,12 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+
+export const updateUserStatus = async (userId, status) => {
+  try {
+    await sql`UPDATE users SET status = ${status} WHERE id = ${userId}`;
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    throw error;
+  }
+};

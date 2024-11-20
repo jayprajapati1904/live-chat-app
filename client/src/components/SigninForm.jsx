@@ -33,8 +33,9 @@ const SigninForm = () => {
       if (response.ok) {
         setSuccess(`Welcome back, ${data.user.username}!`);
         localStorage.setItem("token", data.token);
-        console.log(data.token);
+        localStorage.setItem("userId", data.user.id); // Store the user ID
         login(); // User is authenticated
+
         setError("");
         setLoading(false);
         navigate("/users");
